@@ -1,0 +1,7 @@
+"CustomHeroList"
+{
+	"npc_dota_hero_puck" "1"
+	"npc_dota_hero_skywrath_mage" "1"
+	"npc_dota_hero_chen" "1"
+
+}

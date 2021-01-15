@@ -1,0 +1,182 @@
+// Dota2 Editor
+// Get latest version: https://github.com/zombieJ/nw-dota2editor
+
+"DOTAAbilities"
+{
+	"Version"		"1"
+
+	"duang"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"duang"
+		"ScriptFile"	"duang"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		"CastFilterRejectCaster"	"0"
+		"AbilityCastPoint"	"0.35"
+		"AbilityCastAnimation"	"ACT_DOTA_CAST_ABILITY_1"
+		"AbilityCooldown"	"%cooldown"
+		"AbilityManaCost"	"%manaCost"
+		"AbilityCastRange"	"525"
+		"precache"
+		{
+			"particle"	"particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast.vpcf"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_skeletonking.vsndevts"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_skeletonking.vsndevts"
+			"particle"	"particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast_explosion.vpcf"
+			"particle"	"particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast_debuff.vpcf"
+		}
+		"OnSpellStart"
+		{
+			"TrackingProjectile"
+			{
+				"Target"	"TARGET"
+				"EffectName"	"particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast.vpcf"
+				"Dodgeable"	"1"
+				"MoveSpeed"	"1000"
+			}
+			"FireSound"
+			{
+				"Target"	"CASTER"
+				"EffectName"	"Hero_SkeletonKing.Hellfire_Blast"
+			}
+		}
+		"OnProjectileHitUnit"
+		{
+			"FireSound"
+			{
+				"Target"	"CASTER"
+				"EffectName"	"Hero_SkeletonKing.Hellfire_BlastImpact"
+			}
+			"DeleteOnHit"	"1"
+			"Damage"
+			{
+				"Target"	"TARGET"
+				"Type"	"DAMAGE_TYPE_MAGICAL"
+				"Damage"	"100"
+			}
+			"ApplyModifier"
+			{
+				"Target"	"TARGET"
+				"ModifierName"	"modifier_skeleton_stun_speedSlow"
+			}
+			"ApplyModifier"
+			{
+				"Target"	"TARGET"
+				"ModifierName"	"modifier_skeleton_stun"
+			}
+			"DelayedAction"
+			{
+				"Action"
+				{
+					"ApplyModifier"
+					{
+						"Target"	"TARGET"
+						"ModifierName"	"modifier_skeleton_stun_damage"
+					}
+				}
+				"Delay"	"%stunTime"
+			}
+			"FireEffect"
+			{
+				"Target"	"TARGET"
+				"EffectName"	"particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast_explosion.vpcf"
+				"EffectAttachType"	"attach_origin"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_skeleton_stun_speedSlow"
+			{
+				"Duration"	"%slowTime"
+				"IsDebuff"	"1"
+				"EffectName"	"particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast_debuff.vpcf"
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"	"-20"
+				}
+			}
+			"modifier_skeleton_stun"
+			{
+				"IsDebuff"	"1"
+				"Duration"	"%stunTime"
+				"EffectAttachType"	"follow_overhead"
+				"StatusEffectName"	"particles/generic_gameplay/generic_stunned.vpcf"
+				"OverrideAnimation"	"ACT_DOTA_DISABLED"
+				"States"
+				{
+					"MODIFIER_STATE_STUNNED"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+			"modifier_skeleton_stun_damage"
+			{
+				"Duration"	"%slowTime"
+				"IsDebuff"	"1"
+				"IsHidden"	"1"
+				"OnIntervalThink"
+				{
+					"Damage"
+					{
+						"Target"	"TARGET"
+						"Type"	"DAMAGE_TYPE_MAGICAL"
+						"Damage"	"%lastingDamage"
+					}
+				}
+				"ThinkInterval"	"1"
+			}
+		}
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"cooldown"	"14 12 10 8"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"manaCost"	"95 110 125 140"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"slowTime"	"2"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"stunTime"	"1.1 .1.4 1.7 2.0"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"lastingDamage"	"10 30 50 70"
+			}
+		}
+	}
+
+	"skywrath_mage_arcane_bolt"
+	{
+		"BaseClass"	"ability_lua"
+		"AbilityTextureName"	"skywrath_mage_arcane_bolt"
+		"ScriptFile"	"skywrath_mage_arcane_bolt"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ENEMIES_NO"
+		"AbilityCooldown"	"11 10 9 8"
+		"AbilityManaCost"	"75 85 95 105"
+		"AbilityCastRange"	"700"
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"spell_damage"	"60 120 180 240"
+			}
+		}
+	}
+}
